@@ -1,19 +1,6 @@
-import pyodbc
 from flask import Flask, request, redirect, url_for, render_template_string
 
 app = Flask(__name__)
-
-# Azure SQL Database connection details
-server = 'your-server-name.database.windows.net'  # Replace with your Azure SQL Server
-database = 'MIS'  # Replace with your database name
-username = 'your-username'  # Replace with your database username
-password = 'your-password'  # Replace with your database password
-driver = '{ODBC Driver 17 for SQL Server}'  # Ensure you have installed this driver
-
-# Function to connect to the database
-def connect_db():
-    conn = pyodbc.connect(f'DRIVER={driver};SERVER={server};PORT=1433;DATABASE={database};UID={username};PWD={password};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;')
-    return conn
 
 # HTML template as a string
 html_form = """
@@ -49,17 +36,7 @@ def form():
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
-
-        # Connect to the database and insert the form data
-        connection = connect_db()
-        cursor = connection.cursor()
-
-        # Insert form data into the database (replace 'YourTableName' with the actual table name)
-        cursor.execute("INSERT INTO YourTableName (name, email) VALUES (?, ?)", (name, email))
-        connection.commit()
-        cursor.close()
-        connection.close()
-
+        # Process form data here (e.g., save to database, send email)
         return redirect(url_for('success'))
     return render_template_string(html_form)
 
